@@ -26,17 +26,21 @@ const capacity = 4
 const opt = {retryTimes: 3} // optional
 
 const processor = new ConcurrencyLimiter(ids, handler, capacity, opt)
-const results = await processor.start()
+const {success, failed} = await processor.start()
 
-// result:
+// success:
 // [
 //   {item: '22', resolve: '22 good'},
-//   {item: '11', reject: {message: 'something error!'} },
 //   {item: '88', resolve: '88 good'},
 //   {item: '55', resolve: '55 good'},
 //   {item: '33', resolve: '33 good'},
 //   {item: '77', resolve: '77 good'},
 //   {item: '66', resolve: '66 good'}
 // ]
+// failed:
+// [
+//   {item: '11', reject: {message: 'something error!'} }
+// ]
+
 
 ```
