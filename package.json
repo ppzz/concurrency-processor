@@ -1,6 +1,6 @@
 {
   "name": "concurrency-processor",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "limit concurrence operation",
   "main": "index.js",
   "scripts": {
