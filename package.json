@@ -13,7 +13,7 @@
     "rate",
     "concurrency"
   ],
-  "author": "penn",
+  "author": "ppzz",
   "license": "ISC",
   "devDependencies": {
     "mocha": "^5.2.0",
