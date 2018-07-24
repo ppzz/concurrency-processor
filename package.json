@@ -1,0 +1,30 @@
+{
+  "name": "concurrency-processor",
+  "version": "1.0.0",
+  "description": "limit concurrence operation",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha test",
+    "lint": "standard",
+    "fix": "standard --fix"
+  },
+  "keywords": [
+    "limit",
+    "rate",
+    "concurrency"
+  ],
+  "author": "penn",
+  "license": "ISC",
+  "devDependencies": {
+    "mocha": "^5.2.0",
+    "standard": "^11.0.1"
+  },
+  "dependencies": {
+    "lodash": "^4.17.10"
+  },
+  "standard": {
+    "env": [
+      "mocha"
+    ]
+  }
+}
