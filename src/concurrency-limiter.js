@@ -11,7 +11,15 @@ class ConcurrencyLimiter extends Processor {
   }
 
   async start () {
-    const results = await super.start()
+    let results = await super.start()
+    results = this.sort(results)
+    const g = _.groupBy(results, 'processStats')
+    const success = _.map(g.true, item => _.pick(item, ['item', 'resolve']))
+    const failed = _.map(g.false, item => _.pick(item, ['item', 'reject']))
+    return {success, failed}
+  }
+
+  sort (results) {
     let originalItems = _.clone(this[_originItems])
     return _.map(originalItems, originalItem => {
       return _.find(results, r => r.item === originalItem)

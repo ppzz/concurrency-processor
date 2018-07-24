@@ -24,7 +24,7 @@ describe('class ConcurrentLimiter.#start', () => {
     const opt = {retryTimes: 3}
     const processor = new ConcurrencyLimiter(ids, handler, 4, opt)
 
-    const expectation = [
+    const s = [
       {item: '22', resolve: '22 good'},
       {item: '11', resolve: '11 good'},
       {item: '88', resolve: '88 good'},
@@ -34,7 +34,39 @@ describe('class ConcurrentLimiter.#start', () => {
       {item: '66', resolve: '66 good'}
     ]
 
-    const results = await processor.start()
-    assert.deepEqual(results, expectation)
+    const {success, failed} = await processor.start()
+    assert.deepEqual(success, s)
+    assert.deepEqual(failed, [])
+  })
+
+  it('should 4 success & 3 failed items', async function () {
+    const ids = ['22', '11', '88', '55', '33', '77', '66']
+    const handler = async (item) => {
+      await sleep(50)
+
+      if (Number(item) % 2 === 1) {
+        return item + ' good'
+      }
+      throw {error: 'error'}
+    }
+    const opt = {retryTimes: 3}
+    const processor = new ConcurrencyLimiter(ids, handler, 4, opt)
+
+    const s = [
+      {item: '11', resolve: '11 good'},
+      {item: '55', resolve: '55 good'},
+      {item: '33', resolve: '33 good'},
+      {item: '77', resolve: '77 good'}
+    ]
+
+    const f = [
+      {item: '22', reject: {error: 'error'}},
+      {item: '88', reject: {error: 'error'}},
+      {item: '66', reject: {error: 'error'}}
+    ]
+    const {success, failed} = await processor.start()
+
+    assert.deepEqual(success, s)
+    assert.deepEqual(failed, f)
   })
 })

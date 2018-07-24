@@ -68,6 +68,7 @@ class Processor {
         result = e
       }
     }
+    item.processStats = isOk
     if (isOk) {
       item.resolve = result
     } else {

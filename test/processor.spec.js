@@ -32,7 +32,7 @@ describe('class ConcurrentLimiter.#start', () => {
     }
     const processor = new Processor(ids, handler, 1)
     const start = Date.now()
-    const expectation = [{item: '111', resolve: '111 good'}]
+    const expectation = [{item: '111', resolve: '111 good', processStats: true}]
 
     const results = await processor.start()
     const end = Date.now()
@@ -61,14 +61,14 @@ describe('class ConcurrentLimiter.#start', () => {
 
     const start = Date.now()
     const expectation = [
-      {item: '111', resolve: '111 good'},
-      {item: '222', resolve: '222 good'},
-      {item: '222', resolve: '222 good'},
-      {item: '444', resolve: '444 good'},
-      {item: '555', resolve: '555 good'},
-      {item: '666', resolve: '666 good'},
-      {item: '777', resolve: '777 good'},
-      {item: '888', resolve: '888 good'}
+      {item: '111', resolve: '111 good', processStats: true},
+      {item: '222', resolve: '222 good', processStats: true},
+      {item: '222', resolve: '222 good', processStats: true},
+      {item: '444', resolve: '444 good', processStats: true},
+      {item: '555', resolve: '555 good', processStats: true},
+      {item: '666', resolve: '666 good', processStats: true},
+      {item: '777', resolve: '777 good', processStats: true},
+      {item: '888', resolve: '888 good', processStats: true}
     ]
 
     const results = await processor.start()
@@ -88,7 +88,8 @@ describe('class ConcurrentLimiter.#start', () => {
     while (expectation.length < 400) {
       expectation.push({
         item: String(expectation.length),
-        resolve: String(expectation.length) + ' good'
+        resolve: String(expectation.length) + ' good',
+        processStats: true
       })
     }
     const handler = async (item) => {
@@ -120,10 +121,10 @@ describe('class ConcurrentLimiter.#start', () => {
     const processor = new Processor(ids, handler, 1)
 
     const expectation = [
-      {item: '111', resolve: '111 good'},
-      {item: '222', resolve: '222 good'},
-      {item: '444', resolve: '444 good'},
-      {item: '777', resolve: '777 good'}
+      {item: '111', resolve: '111 good', processStats: true},
+      {item: '222', resolve: '222 good', processStats: true},
+      {item: '444', resolve: '444 good', processStats: true},
+      {item: '777', resolve: '777 good', processStats: true}
     ]
     let firstCallResult
     let firstCallResolveTime
@@ -163,10 +164,10 @@ describe('class ConcurrentLimiter.#start', () => {
     }
     const processor = new Processor(items, handler, 1)
     const expectation = [
-      {item: '111', resolve: '111 good'},
-      {item: '222', resolve: '222 good'},
-      {item: '444', reject: {message: 'a error occurred'}},
-      {item: '777', resolve: '777 good'}
+      {item: '111', resolve: '111 good', processStats: true},
+      {item: '222', resolve: '222 good', processStats: true},
+      {item: '444', reject: {message: 'a error occurred'}, processStats: false},
+      {item: '777', resolve: '777 good', processStats: true}
     ]
 
     const result = await processor.start()
@@ -193,10 +194,10 @@ describe('class ConcurrentLimiter.#start', () => {
     const opt = {retryTimes: 3}
     const processor = new Processor(items, handler, 1, opt)
     const expectation = [
-      {item: '111', resolve: '111 good'},
-      {item: '222', resolve: '222 good'},
-      {item: '444', resolve: '444 good'},
-      {item: '777', resolve: '777 good'}
+      {item: '111', resolve: '111 good', processStats: true},
+      {item: '222', resolve: '222 good', processStats: true},
+      {item: '444', resolve: '444 good', processStats: true},
+      {item: '777', resolve: '777 good', processStats: true}
     ]
 
     const result = await processor.start()
@@ -218,17 +219,17 @@ describe('class ConcurrentLimiter.#start', () => {
         return item + ' good'
       }
       ssr = ssr.indexOf(item.item) === -1 ? item : ssr + item
-      const fakeError = {message: 'an error occurred'}
+      const fakeError = {message: 'error occurred'}
       if (ssr.length < 10) throw fakeError
       return item + ' good'
     }
     const opt = {retryTimes: 3}
     const processor = new Processor(items, handler, 1, opt)
     const expectation = [
-      {item: '111', resolve: '111 good'},
-      {item: '222', reject: {message: 'an error occurred'}},
-      {item: '444', resolve: '444 good'},
-      {item: '777', resolve: '777 good'}
+      {item: '111', resolve: '111 good', processStats: true},
+      {item: '222', reject: {message: 'error occurred'}, processStats: false},
+      {item: '444', resolve: '444 good', processStats: true},
+      {item: '777', resolve: '777 good', processStats: true}
     ]
 
     const result = await processor.start()
